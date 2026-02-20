@@ -35,8 +35,15 @@ export const getStaticProps: GetStaticProps = async (context) => {
   const reducedResults = await getVideosList(results)
 
   const currentVideo = reducedResults.find(
-    (img) => img.id === Number(context.params.videoId)
+    (img) => img.id === Number(context.params?.videoId)
   )
+
+  // If the video is not found (e.g. Cloudinary API unavailable), return 404
+  if (!currentVideo) {
+    return {
+      notFound: true,
+    }
+  }
 
   return {
     props: {
@@ -57,6 +64,6 @@ export async function getStaticPaths() {
 
   return {
     paths: fullPaths,
-    fallback: false,
+    fallback: "blocking",
   }
 }

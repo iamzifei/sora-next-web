@@ -116,9 +116,14 @@ const Home: NextPage = ({ videos }: { videos: VideoProps[] }) => {
 export default Home
 
 export async function getStaticProps() {
-  const results = await getResults()
+  let reducedResults = []
 
-  const reducedResults = await getVideosList(results)
+  try {
+    const results = await getResults()
+    reducedResults = await getVideosList(results)
+  } catch (error) {
+    console.warn("Failed to load videos during build:", error)
+  }
 
   return {
     props: {
